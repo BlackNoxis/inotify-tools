@@ -198,6 +198,7 @@ int main(int argc, char ** argv)
 	inotifytools_initialize_stats();
 	// Now wait till we get event
 	struct inotify_event * event;
+	struct stat sb;
 	char * moved_from = 0;
 
 	do {
@@ -235,6 +236,25 @@ int main(int argc, char ** argv)
 				nasprintf( &new_file, "%s%s",
 				           inotifytools_filename_from_wd( event->wd ),
 				           event->name );
+
+                                if (stat(new_file, &sb) == -1) {
+                                        //perror("stat");
+                                        //exit(EXIT_FAILURE);
+					//printf("Error, does not exist, it was probably deleted\n");
+					printf("Mode:                     %lo (octal)\n",(unsigned long) sb.st_mode);
+                                } else {
+ 					printf("File named %s has been created\n", new_file);
+					printf("I-node number:            %ld\n", (long) sb.st_ino);
+					printf("Mode:                     %lo (octal)\n",(unsigned long) sb.st_mode);
+					printf("Link count:               %ld\n", (long) sb.st_nlink);
+					printf("Ownership:                UID=%ld   GID=%ld\n", (long) sb.st_uid, (long) sb.st_gid);
+					printf("Preferred I/O block size: %ld bytes\n",(long) sb.st_blksize);
+					printf("File size:                %lld bytes\n",(long long) sb.st_size);
+					printf("Blocks allocated:         %lld\n",(long long) sb.st_blocks);
+					/* printf("Last status change:       %s", ctime(&sb.st_ctime)); // this sequence
+					printf("Last file access:         %s", ctime(&sb.st_atime));	// may only work for
+					printf("Last file modification:   %s", ctime(&sb.st_mtime)); */ // only existent files
+                                }
 
 				if ( isdir(new_file) &&
 				    !inotifytools_watch_recursively( new_file, events ) ) {
