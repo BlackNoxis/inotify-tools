@@ -251,9 +251,10 @@ int main(int argc, char ** argv)
 					printf("Preferred I/O block size: %ld bytes\n",(long) sb.st_blksize);
 					printf("File size:                %lld bytes\n",(long long) sb.st_size);
 					printf("Blocks allocated:         %lld\n",(long long) sb.st_blocks);
-					/* printf("Last status change:       %s", ctime(&sb.st_ctime)); // this sequence
-					printf("Last file access:         %s", ctime(&sb.st_atime));	// may only work for
-					printf("Last file modification:   %s", ctime(&sb.st_mtime)); */ // only existent files
+					printf("Last status change:       %d\n", ctime(&sb.st_ctime));	// this sequence
+					printf("Last file access:         %d\n", ctime(&sb.st_atime));	// may only work for
+					printf("Last file modification:   %d\n", ctime(&sb.st_mtime));	// only existent files
+					printf("\n"); // a more humane output
                                 }
 
 				if ( isdir(new_file) &&
